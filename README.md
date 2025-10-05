@@ -165,7 +165,10 @@ Evaluation results on the WidowX robot in the SimplerEnv Visual Matching setting
 
 
 
-LLAMA3.2-1B-VLA
+LLAMA3.2-1B-VLA:
+
+Jetson AGX Orin: Inference latency 108 ms (chunk = 8, ≈ 73 Hz)
+Jetson Nano: Inference latency 387 ms
 
 | Model          | Parameters (B) | libero_spatial SR (%) | libero_object SR (%) | libero_goal SR (%) | libero_10 SR (%) | Average (SR%)  | VRAM(GB) |
 |----------------|----------------|------------------------------|-----------------------------|---------------------------|-------------------------|---------|------|
