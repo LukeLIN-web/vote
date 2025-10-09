@@ -1,8 +1,7 @@
 # VOTE: Vision-Language-Action Optimization with Trajectory Ensemble Voting 🚀🤖
 
-**📄 Paper:** https://arxiv.org/abs/2507.05116  
+ [\[📄 Paper\]](https://arxiv.org/abs/2507.05116) [\[🤗 Model Zoo\]](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf)  [Slide](https://docs.google.com/presentation/d/1zId-ygV3gObqHgm4gLdM4euGUpHomxwDZjJ7UcEmzVs/edit?usp=sharing)
 
- [\[🤗 Model Zoo\]](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf) 
 
 ## News 
 - `2025/09/22` ✨ Released **VOTE llama3.2-1B-VLA** model 👉  👉 [script](https://github.com/LukeLIN-web/vote/blob/main/experiments/speed/llama3-1B.py)  
