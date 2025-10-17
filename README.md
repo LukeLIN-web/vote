@@ -4,7 +4,7 @@
 
 
 ## News 
-- `2025/09/22` ✨ Released **VOTE llama3.2-1B-VLA** model 👉  👉 [script](https://github.com/LukeLIN-web/vote/blob/main/experiments/speed/llama3-1B.py)  
+- `2025/09/22` ✨ Released **VOTE llama3.2-1B-VLA** model 👉  👉 [script](https://github.com/LukeLIN-web/vote/blob/main/experiments/speed/llama3-1B.py) — inference with only **4.34 GB** VRAM usage.
 - `2025/07/10`: 🎉 We release the [Vote 1.0](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf).  ➡️ No need for **complex tokenizers** — migrate to a new VLM with just **2 lines of code** ⚡️  
 
 
