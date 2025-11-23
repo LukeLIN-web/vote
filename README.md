@@ -7,7 +7,7 @@
 
 [![Slide](https://img.shields.io/badge/Slides-07C160?style=for-the-badge&logo=slides&logoColor=white)](https://docs.google.com/presentation/d/1zId-ygV3gObqHgm4gLdM4euGUpHomxwDZjJ7UcEmzVs/edit?usp=sharing) 
 [![Paper](https://img.shields.io/badge/Paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)]([https://github.com/hokindeng/VMEvalKit/blob/features/clocks/paper/video-models-start-to-solve/Video_Model_Start_to_Solve.pdf](https://arxiv.org/abs/2507.05116)) 
-[![Hugging Face](https://img.shields.io/badge/hf-fcd022?style=for-the-badge&logo=huggingface&logoColor=white)]([https://huggingface.co/VideoReason](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf))
+[![Hugging Face](https://img.shields.io/badge/huggingface-fcd022?style=for-the-badge&logo=huggingface&logoColor=white)]([https://huggingface.co/VideoReason](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf))
 
 
 </div>
