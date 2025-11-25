@@ -64,7 +64,6 @@ git clone https://github.com/tensorflow/addons
 cd addons
 pip3 install -e .
 
-# Clone QwenVLA repo and pip install to download dependencies
 git clone https://github.com/LukeLIN-web/vote.git vote
 cd vote
 pip3 install -e .
