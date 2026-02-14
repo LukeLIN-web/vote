@@ -1,31 +1,39 @@
 # VOTE: Vision-Language-Action Optimization with Trajectory Ensemble Voting 🚀🤖
 
-
-
-
 <div align="center">
 
 [![Slide](https://img.shields.io/badge/Slides-07C160?style=for-the-badge&logo=slides&logoColor=white)](https://docs.google.com/presentation/d/1zId-ygV3gObqHgm4gLdM4euGUpHomxwDZjJ7UcEmzVs/edit?usp=sharing) 
 [![Paper](https://img.shields.io/badge/Paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2507.05116) 
 [![Hugging Face](https://img.shields.io/badge/model-fcd022?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf)
 
-
 </div>
 
+## Overview
 
-## News 
-- `2025/09/22` ✨ Released **VOTE llama3.2-1B-VLA** model 👉  👉 [script](https://github.com/LukeLIN-web/vote/blob/main/experiments/speed/llama3-1B.py) — inference with only **4.34 GB** VRAM usage.
-- `2025/07/10`: 🎉 We release the [Vote 1.0](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf).  ➡️ No need for **complex tokenizers** — migrate to a new VLM with just **2 lines of code** ⚡️  
+**VOTE** is a framework for building fast and accurate Vision-Language-Action (VLA) models for robotic manipulation. It introduces **Trajectory Ensemble Voting**, a method that optimizes action prediction by ensembling multiple trajectory candidates decoded from a vision-language backbone. VOTE achieves state-of-the-art performance on both simulated (LIBERO, SimplerEnv) and real-world benchmarks while being **3× faster** than prior VLA methods. Its modular design allows easy migration to any VLM backbone with just 2 lines of code—no complex action tokenizers required.
 
+## Table of Contents
 
-# Installation
+- [News](#news)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Training](#training)
+- [Evaluation](#evaluation)
+- [Results](#results)
+- [Citation](#citation)
+- [License](#license)
 
+## News
+
+- `2025/09/22`: ✨ Released **VOTE LLAMA3.2-1B-VLA** model 👉 [script](https://github.com/LukeLIN-web/vote/blob/main/experiments/speed/llama3-1B.py) — inference with only **4.34 GB** VRAM usage.
+- `2025/07/10`: 🎉 Released [VOTE 1.0](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf). ➡️ No need for **complex tokenizers** — migrate to a new VLM with just **2 lines of code** ⚡️
+
+## Installation
 
 ```bash
-conda create -n effvla python=3.10 -y
-conda activate effvla
+conda create -n vote python=3.10 -y
+conda activate vote
 
-cd ~/ 
 git clone https://github.com/LukeLIN-web/vote.git
 cd vote
 pip install -e .
@@ -35,19 +43,37 @@ ninja --version; echo $?  # Verify Ninja --> should return exit code "0"
 pip install flash-attn==2.6.1 --no-build-isolation
 ```
 
-
-### Quick start
+### Quick Start
 
 ```bash
 cd experiments/speed/
 python effvla.py
 ```
 
-### Speed
+### Speed Benchmarks
 
-We have speed measurement codes under `experiments/speed/`. 
+We provide speed measurement scripts under `experiments/speed/`.
 
-## Installation on AGX Orin
+### Troubleshooting
+
+<details>
+<summary><code>No module named prismatic</code> / <code>No module named experiments</code></summary>
+
+This usually means the package was not installed correctly. Verify with:
+
+```bash
+pip list | grep effvla
+```
+
+If `effvla` is not listed, re-run `pip install -e .` from the repo root.
+</details>
+
+If you run into any other issues, please [open a GitHub issue](https://github.com/LukeLIN-web/vote/issues).
+
+### Installation on Jetson AGX Orin
+
+<details>
+<summary>Click to expand</summary>
 
 ```bash
 python -m venv orin
@@ -56,137 +82,128 @@ source orin/bin/activate
 # Install transformers and other dependencies
 pip3 install packaging ninja transformers==4.51.0 tokenizers==0.21.4 timm==0.9.10 diffusers==0.32.2
 
-# Install Tensorflow 2.15.0
+# Install TensorFlow 2.15.0
 pip3 install tensorflow==2.15.0
 
-# Install Tensorflow's addons from source
+# Install TensorFlow addons from source
 git clone https://github.com/tensorflow/addons
 cd addons
 pip3 install -e .
+cd ..
 
-git clone https://github.com/LukeLIN-web/vote.git vote
+# Install VOTE
+git clone https://github.com/LukeLIN-web/vote.git
 cd vote
 pip3 install -e .
 cd ..
-# This step will install the wrong versions of torch, torchvision that would not work on Jetson machine.
-# We need to install the precompiled wheels for Jetson
+# Note: This step installs torch/torchvision versions incompatible with Jetson.
+# We will override them with precompiled wheels below.
 
-# Install torch, torchvision, torchaudio using Nvidia's precompiled wheels for Jetson. 
-# torch: https://nvidia.box.com/shared/static/mp164asf3sceb570wvjsrezk1p4ftj8t.whl
+# Install torch & torchvision using NVIDIA's precompiled wheels for Jetson
+# torch:       https://nvidia.box.com/shared/static/mp164asf3sceb570wvjsrezk1p4ftj8t.whl
 # torchvision: https://nvidia.box.com/shared/static/xpr06qe6ql3l6rj22cu3c45tz1wzi36p.whl
 pip3 install torch*.whl torchvision*.whl
-
-# This step will output dependency error as followed, ignore them.
-# ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is 
-# the source of the following dependency conflicts.
-# effvla 0.0.1 requires torchvision==0.18.1, but you have torchvision 0.18.0a0+6043bc2 which is incompatible.
 ```
 
+> **Note:** You may see a dependency conflict warning like  
+> `effvla 0.0.1 requires torchvision==0.18.1, but you have torchvision 0.18.0a0+6043bc2`.  
+> This is expected and can be safely ignored.
 
-# Training
+</details>
 
-## Training Setting
+## Training
 
-Training runs on NVIDIA H100 NVL GPUs (94 GB VRAM each) with 756 GB RAM. We set a shuffle buffer of 256K samples.
+### Training Environment
 
+Training runs on NVIDIA H100 NVL GPUs (94 GB VRAM each) with 756 GB RAM. We use a shuffle buffer of 256K samples.
 
-## Steps
+### Data Preparation
 
-BridgeDataV2 and Fractal are a part of Open X-Embodiment Dataset,  the preparation follows: [rlds_dataset_mod](https://github.com/kpertsch/rlds_dataset_mod)
+BridgeDataV2 and Fractal are part of the [Open X-Embodiment](https://robotics-transformer-x.github.io/) dataset. Follow [rlds_dataset_mod](https://github.com/kpertsch/rlds_dataset_mod) for data preparation.
 
-Then run train script:
-```
+### Running Training
+
+```bash
 bash train.sh
 ```
 
+For LIBERO training, refer to [LIBERO.md](LIBERO.md).
 
-### Q&A
+## Evaluation
 
-For libero, read `LIBERO.md` carefully.
+### LIBERO
 
+Follow [LIBERO.md](LIBERO.md) for LIBERO evaluation.
 
-```
-No module named prismatic
-No module named experiments
-```
+### SimplerEnv
 
-It is because you don't install correctly. Check `pip list | grep effvla`. 
+> **Important:** Install SimplerEnv _before_ installing effvla, because installing TensorFlow 2.15 may break the CUDA environment for PyTorch.
 
-If you run into any issues, please open a new GitHub issue.
-
-
-# Evaluation
-
-For libero evaluation, follow `LIBERO.md`.
-
-## SimplerEnv
-For SimplerEnv installation:
-
-You may install SimplerEnv before you install effvla.
-Because install tensorflow 2.15 will break the cuda env in torch.
-
+<details>
+<summary>SimplerEnv installation steps</summary>
 
 ```bash
 conda create -n simpler_env python=3.10
 conda activate simpler_env
 
-git clone  https://github.com/LukeLIN-web/simplerenv.git --recurse-submodules
-pip install numpy==1.24.4 # important, numpy >=1.26 has problem in simpler env
+git clone https://github.com/LukeLIN-web/simplerenv.git --recurse-submodules
+pip install numpy==1.24.4  # numpy >= 1.26 causes issues in SimplerEnv
 
 cd simplerenv/ManiSkill2_real2sim
 pip install -e .
+cd ..
 
-cd simplerenv
 pip install -e .
 
+cd ..
 git clone https://github.com/LukeLIN-web/vote.git
 cd vote
 pip install -e .
+cd ..
 
 sudo apt install ffmpeg
 
 cd simplerenv
 pip install tensorflow==2.15.0
-pip install tensorflow[and-cuda]==2.15.1 # tensorflow gpu support
+pip install "tensorflow[and-cuda]==2.15.1"  # TensorFlow GPU support
 
-
-# we  need to install torch and torchvision again if it shows libtorch_cuda.so: undefined symbol: ncclCommRegister 
+# If you encounter: libtorch_cuda.so: undefined symbol: ncclCommRegister
+# Re-install torch and torchvision:
 pip install torch==2.3.1 torchvision==0.18.1
-pip install mediapy pandas
-pip install gymnasium==0.28.1
+
+pip install mediapy pandas gymnasium==0.28.1
 ```
 
-### Results
+</details>
 
-Evaluation results on the WidowX robot in the SimplerEnv Visual Matching setting. 
+## Results
 
-| Method                  | Put Spoon | Put Carrot | Stack Block | Put Eggplant | Avg. | Latency (ms) ↓ | Speed up ↑ |
-|-------------------------|-----------|------------|--------------|---------------|------|----------------|-------------|
-| RT-1-X                  | 0.0       | 4.2        | 0.0          | 0.0           | 1.1  | --             | --          |
-| Octo             | 47.2      | 9.7        | 4.2          | 56.9          | 30.0 | --             | --          |
-| OpenVLA                 | 0.0       | 0.0        | 0.0          | 4.1           | 1.0  | 240            | 1.00        |
-| RoboVLM    | 29.2      | 25.0       | 12.5         | 58.3          | 31.3 | --             | --          |
-| Openpi0                 | 29.1      | 0.0        | 16.6         | 62.5          | 27.1 | 470            | 0.50        |
-| SpatialVLA | 16.7      | 25.0       | 29.2         | 100.0         | 42.7 | 400            | 0.60        |
-| CogACT                  | 71.7      | 50.8       | 15.0         | 67.5          | 51.3 | 220            | 1.09        |
-| __Ours__               | __58.3__  | __29.2__   | __50.0__     | __95.8__      | __58.3__ | __78__     | __3.1__    |
+### SimplerEnv (WidowX, Visual Matching)
 
+| Method | Put Spoon | Put Carrot | Stack Block | Put Eggplant | Avg. | Latency (ms) ↓ | Speedup ↑ |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| RT-1-X | 0.0 | 4.2 | 0.0 | 0.0 | 1.1 | — | — |
+| Octo | 47.2 | 9.7 | 4.2 | 56.9 | 30.0 | — | — |
+| OpenVLA | 0.0 | 0.0 | 0.0 | 4.1 | 1.0 | 240 | 1.00 |
+| RoboVLM | 29.2 | 25.0 | 12.5 | 58.3 | 31.3 | — | — |
+| OpenPI0 | 29.1 | 0.0 | 16.6 | 62.5 | 27.1 | 470 | 0.50 |
+| SpatialVLA | 16.7 | 25.0 | 29.2 | 100.0 | 42.7 | 400 | 0.60 |
+| CogACT | 71.7 | 50.8 | 15.0 | 67.5 | 51.3 | 220 | 1.09 |
+| **VOTE (Ours)** | **58.3** | **29.2** | **50.0** | **95.8** | **58.3** | **78** | **3.1** |
 
+### LLAMA3.2-1B-VLA
 
-LLAMA3.2-1B-VLA:
+| Model | Params (B) | libero_spatial | libero_object | libero_goal | libero_10 | Average SR | VRAM (GB) |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| LLAMA3.2-1B-VLA | 2.3 | 98.4% | 96.0% | 95.0% | 82.4% | 92.95% | 4.34 |
 
-Jetson AGX Orin: Inference latency 108 ms (chunk = 8, ≈ 73 Hz)
-Jetson Nano: Inference latency 387 ms
-
-| Model          | Parameters (B) | libero_spatial SR (%) | libero_object SR (%) | libero_goal SR (%) | libero_10 SR (%) | Average (SR%)  | VRAM(GB) |
-|----------------|----------------|------------------------------|-----------------------------|---------------------------|-------------------------|---------|------|
-| LLAMA3.2-1B-VLA| 2.3            | 98.4                        |      96                       |         95%                  |            82.4%             |   92.95%      | 4.34  |
-
-The accuracy curve is shown here: https://www.notion.so/How-much-data-need-for-small-VLA-fitting-2796566ea37a80ec8334d65fe0d365cd?source=copy_link
+**Edge deployment latency:**
+- Jetson AGX Orin: 108 ms (chunk = 8, ≈ 73 Hz)
+- Jetson Nano: 387 ms
 
 ## Citation
 
-If you use our code in your work, please cite [our paper](https://arxiv.org/abs/2507.05116):
+If you find this work useful, please cite [our paper](https://arxiv.org/abs/2507.05116):
 
 ```bibtex
 @misc{lin2025votevisionlanguageactionoptimizationtrajectory,
@@ -199,3 +216,7 @@ If you use our code in your work, please cite [our paper](https://arxiv.org/abs/
       url={https://arxiv.org/abs/2507.05116}, 
 }
 ```
+
+## License
+
+This project is released under the [MIT License](LICENSE).

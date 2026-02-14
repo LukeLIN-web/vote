@@ -23,7 +23,6 @@ Requires 1 GPU with ~16 GB VRAM.
 
 Install LIBERO package.
 ```bash
-cd ~/ 
 git clone https://github.com/Lifelong-Robot-Learning/LIBERO.git
 cd LIBERO
 pip install -e .
@@ -43,7 +42,7 @@ When you have multiple checkpoints, the results could be plotted with `batch_plo
 Dataset
 
 ```
-git clone git@hf.co:datasets/openvla/modified_libero_rlds
+git clone https://huggingface.co/datasets/openvla/modified_libero_rlds
 ```
 
 
