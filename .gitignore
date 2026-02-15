@@ -157,3 +157,5 @@ data/
 # Rollout videos and wandb logs
 rollouts/
 wandb/
+.libero/
+*.sh

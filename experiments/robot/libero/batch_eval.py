@@ -1,6 +1,7 @@
 import os
 import subprocess
 import argparse
+import sys
 from pathlib import Path
 from multiprocessing import Process
 from datetime import datetime
@@ -24,7 +25,7 @@ def run_libero_eval(ckpt_path, task_suite_name, gpu_id, log_base_dir="eval_logs"
     print("=" * 70)
     
     cmd = [
-        "python", "run_libero_eval.py",
+        sys.executable, "run_libero_eval.py",
         "--model_family", "openvla",
         "--base_vla_path", "juyil/prismatic-llama3.2-dinosiglip-224px-1b-vlm",
         "--pretrained_checkpoint", str(ckpt_path),
