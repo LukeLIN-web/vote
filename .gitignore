@@ -159,3 +159,4 @@ rollouts/
 wandb/
 .libero/
 *.sh
+.tmp/
