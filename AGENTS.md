@@ -16,6 +16,11 @@
 - `python experiments/speed/effvla.py`: quick local inference/speed smoke check.
 - `python experiments/robot/libero/batch_eval.py --dir <ckpt_parent> --task_suite libero_goal --devices 0`: run LIBERO evaluation on checkpoints.
 
+## LIBERO Eval Runbook
+- Prefer changing runtime eval hyperparameters in shell launchers (for example `run_libero_goal_eval.sh`) instead of editing Python eval sources.
+- Treat `experiments/robot/libero/batch_eval.py` and `experiments/robot/libero/run_libero_eval.py` as stable logic files; only change them for real bug fixes.
+- For one-off comparisons (for example `num_blocks=4`), pass/override values from shell env vars or CLI args and keep Python defaults unchanged.
+
 ## Coding Style & Naming Conventions
 - Python style is enforced by `black` and `ruff` from `pyproject.toml`.
 - Use 4-space indentation and keep line length `<= 121`.

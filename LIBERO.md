@@ -69,6 +69,9 @@ Notes:
 - The task string for "goal" is `libero_goal` (not `goal`).
 - `batch_eval.py --hf_ckpts` only evaluates the hard-coded HF list in the script.
 - If your checkpoints are under `/shared/user71/workspace/juyi/ckpts`, use that path (not `/home/user1/workspace/juyi/ckpts`).
+- Ensure `model_type` matches the backbone family in `experiments/robot/openvla_utils.py` (`GenerateConfig`):
+  - use `model_type: str = "llama2"` for LLaMA2-based checkpoints, base_vla_path: str = "openvla/openvla-7b" 
+  - use `model_type: str = "llama3.2"` for LLaMA3.2-based checkpoints, base_vla_path: juyil/prismatic-llama3.2-dinosiglip-224px-1b-vlm
 When you have multiple checkpoints, the results could be plotted with `batch_plot.ipynb`.
 
 ## Training

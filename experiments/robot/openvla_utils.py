@@ -94,7 +94,7 @@ class GenerateConfig:
     action_head_name: str = "funnel"
     hidden_dim: int = 4096
     num_blocks: int = 4
-    model_type: str = "llama3.2"
+    model_type: str = "llama2"
 
     ## eval config 
     task_suite_name: str = "libero_spatial"
