@@ -17,6 +17,7 @@
 - [News](#news)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [Architecture](#architecture)
 - [Training](#training)
 - [Evaluation](#evaluation)
 - [Results](#results)
@@ -52,7 +53,21 @@ python effvla.py
 
 ### Speed Benchmarks
 
-We provide speed measurement scripts under `experiments/speed/`.
+We provide speed measurement scripts under `experiments/speed/`:
+
+```bash
+# OpenVLA-7B (2-token, 16-action trajectory ensemble)
+python experiments/speed/effvla.py
+
+# LLAMA3.2-1B-VLA (lightweight, ~4.34 GB VRAM)
+python experiments/speed/llama3-1B.py
+
+# Other baselines
+python experiments/speed/openvla.py
+python experiments/speed/cogact.py
+python experiments/speed/pi0.py
+python experiments/speed/spatialvla.py
+```
 
 ### Troubleshooting
 
@@ -111,6 +126,42 @@ pip3 install torch*.whl torchvision*.whl
 
 </details>
 
+## Architecture
+
+### Multi-Token Trajectory Ensemble
+
+VOTE replaces standard single-token action decoding with a **multi-token trajectory ensemble** approach. The VLM backbone generates multiple `<ACT>` tokens, each decoded into an action chunk by a lightweight action head. The final trajectory is assembled by ensembling predictions across tokens.
+
+Key parameters:
+
+| Parameter | Description | Example |
+|---|---|---|
+| `num_actions_chunk` | Total actions in the output sequence | 8 or 16 |
+| `num_actions_per_token` | Actions predicted per `<ACT>` token | 8 |
+| `mode` | Prediction mode (`"mul"` for multi-token ensemble) | `"mul"` |
+
+For example, `num_actions_chunk=16` with `num_actions_per_token=8` produces 2 tokens, each predicting 8 actions (16 total).
+
+### Action Heads
+
+Three action head architectures are available via `--action_head_name`:
+
+| Name | Class | Description |
+|---|---|---|
+| `mlp` | `L1RegressionActionHeadmulmlpk` | Standard MLPResNet-based head |
+| `fel` | `L1RegressionActionHeadFunnel` | Funnel architecture with progressive dimension reduction (more parameter-efficient) |
+
+Additional parameters:
+- `--num_blocks`: Number of MLPResNet blocks (typically 2 for Fractal, 4 for LIBERO)
+- `--hidden_dim`: Hidden dimension size (default: 4096 for OpenVLA-7B, 2048 for LLAMA3.2-1B)
+
+### Supported Backbones
+
+| Backbone | Base Model Path | `model_type` | Params |
+|---|---|---|---|
+| OpenVLA-7B (LLaMA 2) | `openvla/openvla-7b` | `llama2` | 7B |
+| LLAMA3.2-1B-VLA | `juyil/llama3.2-1B-VLM` | `llama3.2` | 2.3B |
+
 ## Training
 
 ### Training Environment
@@ -123,17 +174,72 @@ BridgeDataV2 and Fractal are part of the [Open X-Embodiment](https://robotics-tr
 
 ### Running Training
 
+**Fractal (single GPU):**
+
 ```bash
 bash train.sh
 ```
 
+The default configuration uses:
+
+```bash
+torchrun --standalone --nnodes 1 --nproc-per-node 1 vla-scripts/train.py \
+  --vla_path openvla/openvla-7b \
+  --data_root_dir /data/ \
+  --dataset_name fractal20220817_data \
+  --run_root_dir /data/wandbrun \
+  --use_l1_regression True \
+  --batch_size 4 \
+  --learning_rate 1e-4 \
+  --max_steps 200005 \
+  --save_freq 5000 \
+  --image_aug True \
+  --lora_rank 32 \
+  --num_actions_chunk 8 \
+  --num_actions_per_token 8 \
+  --num_blocks 2 \
+  --mode "mul" \
+  --action_head_name "funnel"
+```
+
 For LIBERO training, refer to [LIBERO.md](LIBERO.md).
+
+### Training Parameters
+
+| Parameter | Description | Default |
+|---|---|---|
+| `--vla_path` | Base VLM checkpoint (HF Hub or local) | `openvla/openvla-7b` |
+| `--use_l1_regression` | Use L1 regression action head | `True` |
+| `--use_diffusion` | Use diffusion-based action head (DDIM) | `False` |
+| `--use_film` | Use FiLM language-vision conditioning | `False` |
+| `--use_proprio` | Include proprioceptive state in input | `False` |
+| `--num_images_in_input` | Number of camera images (1 = 3rd person only) | `1` |
+| `--lora_rank` | LoRA rank for fine-tuning | `32` |
+| `--image_aug` | Enable random crop image augmentation | `True` |
+| `--num_actions_chunk` | Total action sequence length | — |
+| `--num_actions_per_token` | Actions decoded per token | — |
+| `--num_blocks` | MLPResNet depth in action head | — |
+| `--mode` | Prediction mode (`"mul"` for ensemble) | `"mul"` |
+| `--action_head_name` | Action head type (`"mlp"`, `"funnel"`, `"fel"`) | `"funnel"` |
 
 ## Evaluation
 
 ### LIBERO
 
-Follow [LIBERO.md](LIBERO.md) for LIBERO evaluation.
+Follow [LIBERO.md](LIBERO.md) for LIBERO setup, training, and evaluation.
+
+**Quick multi-GPU evaluation:**
+
+```bash
+# Using the shell launcher (recommended)
+CKPT_DIR=/path/to/ckpts TASK_SUITE=libero_goal bash run_libero_goal_eval.sh
+
+# Using the Python script
+python experiments/robot/libero/batch_eval.py \
+  --dir /path/to/ckpts \
+  --task_suite libero_goal \
+  --devices 0 1 2 3 4 5 6 7
+```
 
 ### SimplerEnv
 
