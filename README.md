@@ -5,15 +5,16 @@
 [![Slide](https://img.shields.io/badge/Slides-07C160?style=for-the-badge&logo=slides&logoColor=white)](https://docs.google.com/presentation/d/1zId-ygV3gObqHgm4gLdM4euGUpHomxwDZjJ7UcEmzVs/edit?usp=sharing) 
 [![Paper](https://img.shields.io/badge/Paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2507.05116) 
 [![Hugging Face](https://img.shields.io/badge/model-fcd022?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/collections/juyil/vote-vision-language-action-model-686f5dac2775080477a86cdf)
-[![Video](https://img.shields.io/badge/Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](assets/vote_explainer.mp4)
+[![Project Page](https://img.shields.io/badge/Project_Page-1f6feb?style=for-the-badge&logo=githubpages&logoColor=white)](https://lukelin-web.github.io/vote-website/)
+[![Video](https://img.shields.io/badge/Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://lukelin-web.github.io/vote-website/#video)
 
 </div>
 
 ## Video
 
-[![VOTE in 100 seconds](assets/vote_explainer.jpg)](assets/vote_explainer.mp4)
+[![VOTE in 100 seconds](assets/vote_explainer.jpg)](https://lukelin-web.github.io/vote-website/#video)
 
-*VOTE in 100 seconds (click to play): the single `<ACT>` token, ensemble voting, and results on LIBERO, SimplerEnv and Jetson Orin, with VOTE's own SimplerEnv and LIBERO rollouts.*
+*VOTE in 100 seconds (click to watch on the [project page](https://lukelin-web.github.io/vote-website/)): the single `<ACT>` token, ensemble voting, and results on LIBERO, SimplerEnv and Jetson Orin, with VOTE's own SimplerEnv and LIBERO rollouts.*
 
 ## Overview
 
