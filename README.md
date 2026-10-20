@@ -1,4 +1,4 @@
-# VOTE: Vision-Language-Action Optimization with Trajectory Ensemble Voting 🚀🤖
+# VOTE: Vision-Language-Action Model Optimization for Real-Time Robotic Manipulation 🚀🤖
 
 <div align="center">
 
@@ -321,8 +321,8 @@ If you find this work useful, please cite [our paper](https://arxiv.org/abs/2507
 
 ```bibtex
 @misc{lin2025votevisionlanguageactionoptimizationtrajectory,
-      title={VOTE: Vision-Language-Action Optimization with Trajectory Ensemble Voting}, 
-      author={Juyi Lin and Amir Taherin and Arash Akbari and Arman Akbari and Lei Lu and Guangyu Chen and Taskin Padir and Xiaomeng Yang and Weiwei Chen and Yiqian Li and Xue Lin and David Kaeli and Pu Zhao and Yanzhi Wang},
+      title={VOTE: Vision-Language-Action Model Optimization for Real-Time Robotic Manipulation}, 
+      author={Juyi Lin and Amir Taherin and Arash Akbari and Arman Akbari and Lei Lu and Guangyu Chen and Taskin Padir and Xiaomeng Yang and Jayanth Srinivasa and Xue Lin and David Kaeli and Yanzhi Wang and Pu Zhao and Xuan Shen},
       year={2025},
       eprint={2507.05116},
       archivePrefix={arXiv},
